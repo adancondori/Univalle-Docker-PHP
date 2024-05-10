@@ -1,0 +1,34 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: project_development
+    volumes:
+      - default_mysql_data:/var/lib/mysql
+    ports:
+       - "3308:3306"
+    networks:
+      - networks_default_app
+
+  app:
+    image: php:8.0-apache
+    volumes:
+      - ./php:/var/www/html
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - networks_default_app
+
+volumes:
+  default_mysql_data:
+
+
+networks:
+  networks_default_app:
+    name: 'networks_default_app'
+    external: true
+    driver: bridge
