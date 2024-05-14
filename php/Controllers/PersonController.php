@@ -35,10 +35,12 @@ class PersonController {
         $input = (array) json_decode(file_get_contents('php://input'), TRUE);
         
         if (! $this->validatePerson($input)) {
+            
             return array('status_code_header' => 'HTTP/1.1 401 Created', 'body' => json_encode(array("message" => "Error Person created")));
         }
         var_dump($input);
-        $person = new Person($this->db);
+        $db = Database::getInstance()->getConnection();     
+        $person = new Person($db);
         $person->firstname = $input['firstname'];
         $person->lastname = $input['lastname'];
         $person->email = $input['email'];
