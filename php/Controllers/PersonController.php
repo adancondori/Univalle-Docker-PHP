@@ -32,6 +32,24 @@ class PersonController {
     }
 
     public function create() {
-        echo 'Storing a person';
+        $input = (array) json_decode(file_get_contents('php://input'), TRUE);
+        
+        if (! $this->validatePerson($input)) {
+            return array('status_code_header' => 'HTTP/1.1 401 Created', 'body' => json_encode(array("message" => "Error Person created")));
+        }
+        var_dump($input);
+        $person = new Person($this->db);
+        $person->firstname = $input['firstname'];
+        $person->lastname = $input['lastname'];
+        $person->email = $input['email'];
+
+        if ($person->create()) {
+            return array('status_code_header' => 'HTTP/1.1 201 Created', 'body' => json_encode(array("message" => "Person created")));
+        } else {
+            return array('status_code_header' => 'HTTP/1.1 422 Unprocessable Entity', 'body' => json_encode(array("message" => "Failed to create person")));
+        }
+    }
+    private function validatePerson($input) {
+        return isset($input['firstname']) && isset($input['lastname']) && isset($input['email']);
     }
 }

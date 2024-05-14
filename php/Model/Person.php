@@ -11,6 +11,7 @@ class Person {
     }
 
     public function create() {
+        #$query = "INSERT INTO " . $this->table_name . " SET firstname=:firstname, lastname=:lastname, email=:email";
         $query = "INSERT INTO " . $this->table_name . " SET firstname=:firstname, lastname=:lastname, email=:email";
         $stmt = $this->conn->prepare($query);
 
